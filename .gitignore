@@ -2,3 +2,7 @@
 *.out
 *.zip
 core
+
+*.fdb_latexmk
+*.log
+*.pdf
