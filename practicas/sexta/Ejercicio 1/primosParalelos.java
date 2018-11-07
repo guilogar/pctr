@@ -16,7 +16,7 @@ public class primosParalelos {
              linf        = 0;
              lsup        = tVentana;
              
-             ArrayList<Future<Long>> contParciales = new ArrayList<Future<Long>>();
+             ArrayList<Future<Object>> contParciales = new ArrayList<Future<Object>>();
              long inicTiempo = System.nanoTime();
              
              ThreadPoolExecutor ept;
@@ -28,9 +28,9 @@ public class primosParalelos {
                  lsup += tVentana;
              }
              
-             for(Future<Long> iterador:contParciales) {
+             for(Future<Object> iterador:contParciales) {
                  try{
-                     primosTotal += iterador.get();
+                     primosTotal += (long)iterador.get();
                  } catch (CancellationException e) {}
                    catch (ExecutionException e) {}
                    catch (InterruptedException e) {}

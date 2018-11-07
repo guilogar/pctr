@@ -1,6 +1,6 @@
 import java.util.concurrent.Callable;
 
-public class tareaPrimos implements Callable<Long> {
+public class tareaPrimos implements Callable<Object> {
     private final long linf;
     private final long lsup;
     private Long total = new Long(0);
@@ -19,7 +19,7 @@ public class tareaPrimos implements Callable<Long> {
         return(true);
     }
     
-    public Long call(){
+    public Object call(){
         for(long i=linf; i<=lsup;i++)
             if(esPrimo(i)) total++;
         
