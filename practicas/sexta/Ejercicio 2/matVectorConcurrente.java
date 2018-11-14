@@ -42,8 +42,10 @@ public class matVectorConcurrente implements Runnable {
         ExecutorService pool = Executors.newCachedThreadPool();
         int linf = 0;
         int lsup = 0;
+        
         System.out.println("Tareas => " + tareas);
-        for (int i = 0; i < tareas && i < matriz.length; i++) {
+        
+        for (int i = 1; i < tareas && i < matriz.length; i++) {
             lsup = linf + (matriz.length / tareas);
             if(matriz.length >= tareas) {
                 lsup -= 1;
@@ -94,20 +96,27 @@ public class matVectorConcurrente implements Runnable {
         for (int i = 0; i < tamVector; i++) {
             vector[i][0] = new Random().nextInt(maxNum);
         }
-        System.out.println("Matriz");
-        printMatriz(matriz);
-        System.out.println("------");
-        System.out.println("Vector");
-        printMatriz(vector);
-        System.out.println("------");
-        System.out.println();
+        /*
+         *System.out.println("Matriz");
+         *printMatriz(matriz);
+         *System.out.println("------");
+         *System.out.println("Vector");
+         *printMatriz(vector);
+         *System.out.println("------");
+         *System.out.println();
+         */
         
-        for (int i = 0; i < tareas; i++) {
+        for (int i = 1; i < tareas; i++) {
             long start = System.currentTimeMillis();
+            
             System.out.println("Res");
-            printMatriz(mulMatrizVector(matriz, i));
+            
+            mulMatrizVector(matriz, i);
+            
             System.out.println("---");
+            
             long end = System.currentTimeMillis();
+            System.out.println("Tarda => " + (end - start));
         }
         //utilsFile.writeInFile("info", "matVectorConcurrente.txt", tamVector + " " + (end-start) + "\n");
     }

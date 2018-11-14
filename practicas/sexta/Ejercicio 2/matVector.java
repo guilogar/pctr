@@ -75,7 +75,8 @@ public class matVector {
          */
         
         long start = System.currentTimeMillis();
-        printMatriz(new matVector().mulMatrizVector(matriz, vector));
+        new matVector().mulMatrizVector(matriz, vector);
         long end = System.currentTimeMillis();
+        System.out.println("Tarda => " + (end - start));
     }
 }
