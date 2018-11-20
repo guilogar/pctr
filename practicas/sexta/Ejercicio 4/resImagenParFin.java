@@ -5,13 +5,12 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.util.concurrent.*;
 
-public class resImagenParGru implements Runnable {
-    private static int tareas = Runtime.getRuntime().availableProcessors();
+public class resImagenParFin implements Runnable {
     //private static int[][] matriz;
     private int linf, lsup;
     private BufferedImage imagen;
     
-    public resImagenParGru(int linf, int lsup, BufferedImage imagen) {
+    public resImagenParFin(int linf, int lsup, BufferedImage imagen) {
         this.linf = linf;
         this.lsup = lsup;
         this.imagen = imagen;
@@ -66,25 +65,14 @@ public class resImagenParGru implements Runnable {
      *}
      */
     
-    // Metodo que utiliza el grano grueso.
+    // Metodo que utiliza el grano fino.
     public static void ConvertirAGris(String ficheroOriginal, String ficheroResultado) throws IOException, InterruptedException {
         
         ExecutorService pool = Executors.newCachedThreadPool();
         BufferedImage imagen = ImageIO.read(new File(ficheroOriginal));
-        int linf = 0;
-        int lsup = 0;
         
-        for (int i = 0; i < tareas && i < imagen.getHeight(); i++) {
-            lsup = linf + (imagen.getHeight() / tareas);
-            if(imagen.getHeight() >= tareas) {
-                lsup -= 1;
-            }
-            pool.execute(new resImagenParGru(linf, lsup, imagen));
-            linf = lsup + 1;
-        }
-        if(imagen.getHeight() > tareas && imagen.getHeight() % tareas != 0) {
-            lsup = linf + (imagen.getHeight() % tareas) - 1;
-            pool.execute(new resImagenParGru(linf, lsup, imagen));
+        for (int i = 0; i < imagen.getHeight(); i++) {
+            pool.execute(new resImagenParFin(i, i, imagen));
         }
         pool.shutdown();
         pool.awaitTermination(1L, TimeUnit.DAYS);
