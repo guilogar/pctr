@@ -28,7 +28,6 @@ public class utilsFile {
             bw = new BufferedWriter(fw);
             bw.write(content);
             
-            System.out.println("Done");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

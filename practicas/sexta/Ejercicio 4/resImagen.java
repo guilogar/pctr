@@ -26,8 +26,12 @@ public class resImagen {
     public static void main(String[] args) throws IOException, InterruptedException {
         
         System.out.println("Convirtiendo a escala de grises");
+        double initTiempo = System.currentTimeMillis();
         ConvertirAGris("uca.png", "uca_gris.png");
+        double tiempoTotal = (System.currentTimeMillis()-initTiempo);
         
+        utilsFile.writeInFile("info", "resImagen.txt", ""+0+" "+0+"\n");
+        utilsFile.writeInFile("info", "resImagen.txt", ""+1+" "+(tiempoTotal / tiempoTotal)+"\n");
         /*
          *System.out.println("Cargando fichero en matriz");
          *matriz = cargar("uca_gris.png");

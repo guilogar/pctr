@@ -67,22 +67,30 @@ public class resImagenParGru implements Runnable {
      */
     
     // Metodo que utiliza el grano grueso.
-    public static void ConvertirAGris(String ficheroOriginal, String ficheroResultado) throws IOException, InterruptedException {
+    public static void ConvertirAGris(String ficheroOriginal, String ficheroResultado)
+            throws IOException, InterruptedException
+    {
+        double initTiempoSec = System.currentTimeMillis();
+        resImagen.ConvertirAGris(ficheroOriginal, ficheroResultado);
+        double tiempoTotalSec = (System.currentTimeMillis()-initTiempoSec);
         
+        double initTiempoConcurrente = System.currentTimeMillis();
         ExecutorService pool = Executors.newCachedThreadPool();
         BufferedImage imagen = ImageIO.read(new File(ficheroOriginal));
         int linf = 0;
         int lsup = 0;
         
-        for (int i = 0; i < tareas && i < imagen.getHeight(); i++) {
+        int i;
+        for (i = 0; i < tareas && i < imagen.getHeight(); i++)
+        {
             lsup = linf + (imagen.getHeight() / tareas);
-            if(imagen.getHeight() >= tareas) {
-                lsup -= 1;
-            }
+            if(imagen.getHeight() >= tareas) { lsup -= 1; }
             pool.execute(new resImagenParGru(linf, lsup, imagen));
             linf = lsup + 1;
         }
-        if(imagen.getHeight() > tareas && imagen.getHeight() % tareas != 0) {
+        if(imagen.getHeight() > tareas && imagen.getHeight() % tareas != 0)
+        {
+            i++;
             lsup = linf + (imagen.getHeight() % tareas) - 1;
             pool.execute(new resImagenParGru(linf, lsup, imagen));
         }
@@ -90,6 +98,10 @@ public class resImagenParGru implements Runnable {
         pool.awaitTermination(1L, TimeUnit.DAYS);
         
         ImageIO.write(imagen, "png", new File(ficheroResultado));
+        double tiempoTotalConcurrente = (System.currentTimeMillis()-initTiempoConcurrente);
+        
+        utilsFile.writeInFile("info", "resImagenParGru.txt", ""+0+" "+0+"\n");
+        utilsFile.writeInFile("info", "resImagenParGru.txt", ""+i+" "+(tiempoTotalSec / tiempoTotalConcurrente)+"\n");
     }
     
     public static void main(String[] args) throws IOException, InterruptedException {

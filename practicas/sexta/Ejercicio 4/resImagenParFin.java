@@ -66,18 +66,28 @@ public class resImagenParFin implements Runnable {
      */
     
     // Metodo que utiliza el grano fino.
-    public static void ConvertirAGris(String ficheroOriginal, String ficheroResultado) throws IOException, InterruptedException {
+    public static void ConvertirAGris(String ficheroOriginal, String ficheroResultado) 
+            throws IOException, InterruptedException
+    {
+        double initTiempoSec = System.currentTimeMillis();
+        resImagen.ConvertirAGris(ficheroOriginal, ficheroResultado);
+        double tiempoTotalSec = (System.currentTimeMillis()-initTiempoSec);
         
+        double initTiempoConcurrente = System.currentTimeMillis();
         ExecutorService pool = Executors.newCachedThreadPool();
         BufferedImage imagen = ImageIO.read(new File(ficheroOriginal));
         
-        for (int i = 0; i < imagen.getHeight(); i++) {
+        int i;
+        for (i = 0; i < imagen.getHeight(); i++)
             pool.execute(new resImagenParFin(i, i, imagen));
-        }
         pool.shutdown();
         pool.awaitTermination(1L, TimeUnit.DAYS);
         
         ImageIO.write(imagen, "png", new File(ficheroResultado));
+        double tiempoTotalConcurrente = (System.currentTimeMillis()-initTiempoConcurrente);
+        
+        utilsFile.writeInFile("info", "resImagenParFin.txt", ""+0+" "+0+"\n");
+        utilsFile.writeInFile("info", "resImagenParFin.txt", ""+i+" "+(tiempoTotalSec / tiempoTotalConcurrente)+"\n");
     }
     
     public static void main(String[] args) throws IOException, InterruptedException {
