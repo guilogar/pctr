@@ -28,6 +28,8 @@ public class primosParalelos {
                  lsup += tVentana;
              }
              
+             ept.shutdown();
+             
              for(Future<Object> iterador:contParciales) {
                  try{
                      primosTotal += (long)iterador.get();
@@ -37,7 +39,6 @@ public class primosParalelos {
              }
              
              long tiempoTotal = (System.nanoTime()-inicTiempo)/(long)1.0e9;
-             ept.shutdown();
              
              if(k == 1) {
                 tiempoUno = tiempoTotal;
