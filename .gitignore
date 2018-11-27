@@ -3,6 +3,7 @@
 *.zip
 core
 
+*.aux
 *.fdb_latexmk
 *.log
 *.pdf
