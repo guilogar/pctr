@@ -1,14 +1,24 @@
+import java.io.EOFException;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.concurrent.Semaphore;
 
 public class ficheroSeguro
 {
     public static void main (String[] args) {
         Semaphore s = new Semaphore(1);
+        String ficherito = "";
+        
+        try
+        {
+            ficherito = args[0];
+        } catch(Exception e) { }
         
         for (int i = 0; i < 10; i++)
         {
-            Lector l = new Lector(s);
-            Escritor e = new Escritor(s);
+            Lector l = new Lector(s, ficherito);
+            Escritor e = new Escritor(s, ficherito);
             l.start();
             e.start();
         }
@@ -18,11 +28,12 @@ public class ficheroSeguro
 class Lector extends Thread
 {
     Semaphore s;
-    public static int numLectores = 0;
+    private String nombreFichero;
     
-    public Lector(Semaphore s)
+    public Lector(Semaphore s, String nombreFichero)
     {
         this.s = s;
+        this.nombreFichero = nombreFichero;
     }
     
     @Override
@@ -35,10 +46,19 @@ class Lector extends Thread
     {
         try {
             this.s.acquire();
-            numLectores++;
-            System.out.println("Leyendo....");
-            numLectores--;
-            System.out.println(numLectores);
+            
+            // Para leer en exclusión mutua
+            File ruta = new File(this.nombreFichero);
+            try
+            {
+                RandomAccessFile fichero = new RandomAccessFile(ruta, "r");
+                
+                while(fichero.getFilePointer() <= fichero.length())
+                System.out.println(fichero.readLine());
+                fichero.close();
+            } catch (EOFException e) { }
+              catch (Exception e) { }
+            
             this.s.release();
         } catch(Exception e) { }
     }
@@ -47,27 +67,35 @@ class Lector extends Thread
 class Escritor extends Thread
 {
     Semaphore s;
-    public static int numEscritores = 0;
+    private String nombreFichero;
     
-    public Escritor(Semaphore s)
+    public Escritor(Semaphore s, String nombreFichero)
     {
         this.s = s;
+        this.nombreFichero = nombreFichero;
     }
     
     @Override
     public void run()
     {
-        this.escribir("");
+        this.escribir("holi");
     }
     
     private void escribir(String w)
     {
         try {
             this.s.acquire();
-            numEscritores++;
-            System.out.println("Escribiendo....");
-            numEscritores--;
-            System.out.println(numEscritores);
+            
+            // Para escribir en exclusión mutua
+            File ruta = new File(this.nombreFichero);
+            try
+            {
+                RandomAccessFile fichero = new RandomAccessFile(ruta, "rw");
+                
+                fichero.writeUTF(w);
+                fichero.close();
+            } catch (IOException e) { }
+            
             this.s.release();
         } catch(Exception e) { }
     }

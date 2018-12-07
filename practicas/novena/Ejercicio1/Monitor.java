@@ -33,24 +33,26 @@ public class Monitor {
         ExecutorService pool = Executors.newCachedThreadPool();
         Monitor m = new Monitor();
         
-        pool.execute(new impresora(m));
+        pool.execute(new Impresora(m));
         for (int i = 1; i < N; i++) {
-            pool.execute(new impresora(m));
+            pool.execute(new Impresora(m));
         }
         pool.shutdown();
         pool.awaitTermination(1L, TimeUnit.DAYS);
     }
 }
 
-class impresora implements Runnable {
+class Impresora implements Runnable {
     private Monitor m;
     
-    public impresora(Monitor m) {
+    public Impresora(Monitor m)
+    {
         this.m = m;
     }
     
     public void run() {
         int number_printer = m.take_print();
-        System.out.println("Esta imprimiendo por la impresora " + number_printer + " en el hilo " + Thread.currentThread().getName());
+        System.out.println("Esta imprimiendo por la impresora " + number_printer +
+                           " en el hilo " + Thread.currentThread().getName());
     }
 }

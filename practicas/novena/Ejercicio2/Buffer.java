@@ -23,17 +23,17 @@ public class Buffer {
     }
     
     public synchronized double[][] extraer () {
-      double valor[][];
-      while (cont == 0)
-        try {
-          wait();
-        } catch (InterruptedException e) {
-          System.err.println("wait interrumpido");
-        }
-      valor = buffer[takeOut];
-      takeOut = (takeOut + 1) % numSlots;
-      cont--;
-      notifyAll();
-      return valor;
+        double valor[][];
+        while (cont == 0)
+          try {
+            wait();
+          } catch (InterruptedException e) {
+            System.err.println("wait interrumpido");
+          }
+        valor = buffer[takeOut];
+        takeOut = (takeOut + 1) % numSlots;
+        cont--;
+        notifyAll();
+        return valor;
     }
 } //Buffer
