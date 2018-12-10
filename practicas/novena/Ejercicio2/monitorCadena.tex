@@ -1,0 +1,79 @@
+\documentclass[]{article}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{algorithm2e}
+\usepackage{program}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rfoot{Page \thepage\hspace{1pt} de~\pageref{LastPage}}
+
+\title{Practica 9}
+\author{Guillermo Lopez Garcia}
+\begin{document}
+\maketitle
+
+\textbf{Ejercicio 2.}
+
+\begin{program} % Inicio del programa
+\mbox{monitor cadena} % titulo del monitor
+
+% Variables del monitor
+var:
+numSlots, putIn, takeOut, cont: integer;
+libre: matriz[1..numSlots] of double;
+imp: condition;
+
+\PROC|insertar| (valor: matriz of double) \BODY\\ % Metodo del monitor para reservar el recurso compartido
+
+\BEGIN\\
+\DO{}
+\IF{} cont==numSlots \THEN{} wait (imp) \FI;\\
+    buffer[putin]:=valor;
+    putIn:= (putIn + 1) mod numSlots;
+    cont++;
+    send (imp);
+\OD;\\
+
+\END\\
+
+\ENDPROC\\
+% Fin del metodo
+
+\PROC|extraer| () \BODY\\ % Metodo del monitor para liberar el recurso compartido accesido en exclusion mutua
+
+\BEGIN\\
+\DO{}
+\IF{} cont==0 \THEN{} wait (imp) \FI;\\
+    var:
+    valor: matriz of double
+    
+    valor:=buffer[takeOut];
+    takeOut:= (takeOut + 1) mod numSlots;
+    cont--;
+    send (imp);
+    return valor;
+\OD;\\
+\END\\
+
+\ENDPROC\\
+% Fin del metodo
+
+\BEGIN\\ % Programa inicial
+\DO{}
+    numSlots:= 0;
+    putIn:= 0;
+    takeOut:= 0;
+    cont:= 0;
+    buffer:= matriz of double[numSlots][numSlots];
+\OD;\\
+\END\\
+% Fin del programa
+
+\end{program}
+
+% Fin del documento
+\end{document}

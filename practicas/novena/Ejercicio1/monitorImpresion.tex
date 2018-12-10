@@ -1,0 +1,76 @@
+\documentclass[]{article}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{algorithm2e}
+\usepackage{program}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rfoot{Page \thepage\hspace{1pt} de~\pageref{LastPage}}
+
+\title{Practica 9}
+\author{Guillermo Lopez Garcia}
+\begin{document}
+\maketitle
+
+\textbf{Ejercicio 1.}
+
+\begin{program} % Inicio del programa
+\mbox{monitor impresoras} % titulo del monitor
+
+% Variables del monitor
+var:
+i, impresoras: integer;
+libre: array[1..3] of boolean;
+imp: condition;
+
+\PROC|integer take_print| () \BODY\\ % Metodo del monitor para reservar el recurso compartido
+
+\BEGIN\\
+\DO{}
+\IF{} impresoras==0 \THEN{} wait (imp) \FI;\\
+n:=1;\\
+\OD;\\
+
+\WHILE{} libre[n] \neq{} true \DO{}
+n++;
+\OD;\\
+
+libre[n]:=false;
+impresoras--;
+return n;
+\END\\
+
+\ENDPROC\\
+% Fin del metodo
+
+\PROC|drop_print| (var n: integer) \BODY\\ % Metodo del monitor para liberar el recurso compartido accesido en exclusion mutua
+
+\BEGIN\\
+\DO{}
+libre[n]:=true;
+impresoras++;
+send (imp);
+\OD;\\
+\END\\
+
+\ENDPROC\\
+% Fin del metodo
+
+\BEGIN\\ % Programa inicial
+\DO{}
+  \FOR{} i:=1 \TO{} 3 \STEP{} 1 \DO\\
+     libre[i]:=true;
+  \OD;\\
+  improsoras:=3;
+\OD;\\
+\END\\
+% Fin del programa
+
+\end{program}
+
+% Fin del documento
+\end{document}
