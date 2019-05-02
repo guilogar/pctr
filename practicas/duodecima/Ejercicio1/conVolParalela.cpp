@@ -8,7 +8,8 @@
 #include <vector>
 
 using namespace std;
-int calcularConvolucion(vector<vector<int>> kernel, int minLimite, int maxLimite);
+//int calcularConvolucion(vector<vector<int>> kernel, int minLimite, int maxLimite);
+int calcularConvolucion(int minLimite, int maxLimite);
 
 int main(int argc, const char *argv[])
 {
@@ -23,13 +24,20 @@ int main(int argc, const char *argv[])
     for (int i = 0; i < numeroHilos; i++)
     {
         max += ventana;
-        hilos.push_back(thread(calcularConvolucion, kernel, min, max));
+        thread t(calcularConvolucion, min, max);
+        hilos.push_back(t);
         min += ventana;
     }
     
-    for(auto& thread : hilos) {
+    for(auto& thread : hilos)
+    {
         thread.join();
     }
 
+    return 0;
+}
+
+int calcularConvolucion(int minLimite, int maxLimite)
+{
     return 0;
 }
