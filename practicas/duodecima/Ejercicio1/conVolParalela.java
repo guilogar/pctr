@@ -57,27 +57,6 @@ public class conVolParalela implements Runnable
                 }
                 
                 matriz[i][j] = total;
-                
-                /*
-                 *for (int k = 0; k < miniMatriz.length; k++)
-                 *{
-                 *    for (int p = 0; p < miniMatriz.length; p++)
-                 *    {
-                 *        System.out.print("| " + miniMatriz[k][p] + " |");
-                 *    }
-                 *    System.out.println();
-                 *}
-                 */
-                /*
-                 *for (int k = 0; k < convolucion.length; k++)
-                 *{
-                 *    for (int p = 0; p < convolucion.length; p++)
-                 *    {
-                 *        System.out.print("| " + convolucion[k][p] + " |");
-                 *    }
-                 *    System.out.println();
-                 *}
-                 */
             }
         }
     }
@@ -99,12 +78,36 @@ public class conVolParalela implements Runnable
         System.out.print("Elija el numero de tareas para el procesamiento => ");
         int tareas = s.nextInt();
         
+        s.reset();
+        System.out.print("¿Desea usar un matriz de prueba o una dinámica? (prueba/dinamica) (p/d) => ");
+        String eleccion = s.next();
+        
+        int[][] matriz_prueba =
+        {
+            {-14, 5  , -5 , 5  , -11, -15, 7  , 18 , -6 , -12}, // 1
+            {-8 , -3 , 17 , -5 , 5  , -11, -2 , -9 , -18, 3  }, // 2
+            {2  , 4  , -4 , 4  , 6  , 2  , 16 , 1  , 6  , -8 }, // 3
+            {-5 , 4  , 9  , 2  , -18, 19 , 0  , 9  , 9  , 6  }, // 4
+            {9  , -19, -17, -1 , -12, 8  , 0  , 7  , -20, -6 }, // 5
+            {-18, -6 , 19 , -2 , 10 , -3 , 13 , 6  , 18 , -1 }, // 6
+            {11 , -15, -17, 0  , 0  , 17 , -9 , -20, -2 , -20}, // 7
+            {6  , -12, 13 , 10 , 7  , -18, -10, -13, 1  , -18}, // 8
+            {2  , 3  , -4 , -7 , 14 , 19 , 2  , 7  , 5  , -8 }, // 9
+            {-14, -12, -2 , -19, 9  , 10 , 11 , 12 , 10 , -11}, // 10
+        };
+        
         Random r = new Random();
         for (int i = 0; i < matriz.length; i++)
         {
             for (int j = 0; j < matriz[i].length; j++)
             {
-                matriz[i][j] = (r.nextInt(40) - 20);
+                if(eleccion.equals("prueba") || eleccion.equals("p"))
+                {
+                    matriz[i][j] = matriz_prueba[i][j];
+                } else
+                {
+                    matriz[i][j] = (r.nextInt(40) - 20);
+                }
             }
         }
         
@@ -162,14 +165,14 @@ public class conVolParalela implements Runnable
             }
         }
         
-        int min = 0, max = 0;
-        int ventana = matriz.length / tareas;
+        int min = 0, max = 0, ventana = matriz.length / tareas;
         for (int i = 0; i < tareas; i++)
         {
              max += ventana;
              es.execute(new conVolParalela(kernel, min, max));
              min += ventana;
         }
+        
         if(max < matriz.length)
              es.execute(new conVolParalela(kernel, min, matriz.length));
         es.shutdown();
